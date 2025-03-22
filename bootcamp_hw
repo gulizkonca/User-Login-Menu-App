@@ -1,0 +1,145 @@
+import re
+
+# Kullanıcı ve parola verileri
+users = {
+    "admin": "Admin123!",
+    "user1": "User1pass!",
+    "user2": "User2pass!"
+}
+current_user = None
+
+# Login Fonksiyonu
+def login():
+    global current_user
+    print("Uygulamaya hoş geldiniz. Çıkmak için 'Q' ya da 'q' yazabilirsiniz.\n")
+    attempts = 0
+    while attempts < 5:
+        username = input("Kullanıcı Adı: ")
+        if username.lower() == "q":
+            print("Çıkış yapılıyor...")
+            return False
+        password = input("Parola: ")
+        if username in users and users[username] == password:
+            print(f"Giriş başarılı! Hoş geldin {username}\n")
+            current_user = username
+            return True
+        else:
+            print("Kullanıcıadı/Parola Hatalı.\n")
+            attempts += 1
+    print("5 kez hatalı giriş yaptınız. Program sonlandırılıyor.")
+    return False
+
+# Ana Menü
+def main_menu():
+    while True:
+        print(f"{current_user} ile oturum açtınız")
+        print("Menü 1: Dosya Benzerlik Aracı")
+        print("Menü 2: Mini Quiz Uygulaması")
+        print("Menü 3: Parola Değiştir")
+        print("Menü 0: Logout")
+        choice = input("Seçiminiz (0-3): ")
+        if choice == "1":
+            file_similarity_tool()
+        elif choice == "2":
+            mini_quiz()
+        elif choice == "3":
+            change_password()
+        elif choice == "0":
+            print("Oturum kapatılıyor...\n")
+            break
+        else:
+            print("Hatalı seçim, tekrar deneyin.\n")
+
+# Parola Değiştir
+def change_password():
+    global users, current_user
+    while True:
+        print("\nParola değiştirme menüsüne hoş geldiniz.")
+        proceed = input("Parolanızı güncellemek istiyor musunuz? (E/H): ").lower()
+        if proceed == "h":
+            print("Ana menüye dönülüyor...\n")
+            return
+        old_password = input("Mevcut parolanızı giriniz: ")
+        if users[current_user] != old_password:
+            print("Hatalı parola! Tekrar deneyin.\n")
+            continue
+        new_password1 = input("Yeni parolanızı giriniz: ")
+        new_password2 = input("Yeni parolanızı tekrar giriniz: ")
+        if new_password1 != new_password2:
+            print("Parolalar eşleşmiyor! Tekrar deneyin.\n")
+            continue
+        if not is_password_complex(new_password1):
+            print("Parola karmaşıklık kurallarına uymuyor! Tekrar deneyin.\n")
+            continue
+        users[current_user] = new_password1
+        print("Parolanız başarıyla güncellendi.\n")
+        return
+
+def is_password_complex(password):
+    if len(password) < 8:
+        return False
+    if not re.search(r"[A-Z]", password):
+        return False
+    if not re.search(r"[a-z]", password):
+        return False
+    if not re.search(r"\d", password):
+        return False
+    if not re.search(r"[!@#$%^&*]", password):
+        return False
+    return True
+
+# Basit Dosya Benzerlik Aracı (manuel çözüm)
+def file_similarity_tool():
+    print("\nDosya Benzerlik Aracına Hoş Geldiniz.")
+    file1_path = input("1. dosya yolunu giriniz (örn: dosya1.txt): ")
+    file2_path = input("2. dosya yolunu giriniz (örn: dosya2.txt): ")
+    try:
+        with open(file1_path, "r", encoding="utf-8") as f1:
+            lines1 = f1.readlines()
+        with open(file2_path, "r", encoding="utf-8") as f2:
+            lines2 = f2.readlines()
+    except FileNotFoundError:
+        print("Hata: Dosya(lar) bulunamadı! Yol bilgisini kontrol edin.\n")
+        return
+    common_lines = set(lines1) & set(lines2)
+    similarity = len(common_lines) / max(len(lines1), len(lines2)) * 100
+    print(f"Benzerlik oranı: %{similarity:.2f}")
+    if similarity > 95:
+        print("Yüksek Benzerlik Tespit Edildi.\n")
+    elif similarity > 75:
+        print("Dosyalarda Benzerlik Tespit Edildi.\n")
+    elif similarity > 45:
+        print("Düşük Benzerlik Tespit Edildi.\n")
+    else:
+        print("Benzerlik Tespit Edilemedi.\n")
+    input("Ana menüye dönmek için Enter'a basınız.\n")
+
+# Quiz
+def mini_quiz():
+    print("\nMini Quiz Uygulamasına Hoş Geldiniz.")
+    filename = input("Soru dosyasının yolunu giriniz (örn: quiz.txt): ")
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+    except FileNotFoundError:
+        print("Hata: Dosya bulunamadı! Yol bilgisini kontrol edin.\n")
+        return
+    score = 0
+    total = len(lines)
+    for line in lines:
+        if "|" not in line:
+            continue
+        question, answer = line.strip().split("|")
+        user_answer = input(f"{question.strip()} : ")
+        if user_answer.strip().lower() == answer.strip().lower():
+            print("Doğru!\n")
+            score += 1
+        else:
+            print(f"Yanlış! Doğru cevap: {answer.strip()}\n")
+    print(f"Quiz bitti! Puanınız: {score}/{total}\n")
+    input("Ana menüye dönmek için Enter'a basınız.\n")
+
+# Ana akış
+if login():
+    main_menu()
+print("Uygulama kapandı.")
