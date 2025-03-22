@@ -1,0 +1,10 @@
+Einstein'ın genel görelilik teorisi hangi fiziksel olayı açıklar? | Kütleçekim
+Bir elektronun yükü kaç coulombdur? | 1.6e-19
+En yaygın kullanılan kuantum fiziği deneyi nedir? | Çift Yarık Deneyi
+Planck sabiti yaklaşık olarak kaçtır? | 6.63e-34
+Standart modele göre Higgs bozonunun temel rolü nedir? | Kütle kazandırmak
+Manyetik alan birimi nedir? | Tesla
+Bir cismin eylemsizliği hangi büyüklüğe bağlıdır? | Kütle
+Heisenberg'in belirsizlik ilkesine göre hangi iki büyüklük aynı anda kesin olarak bilinemez? | Konum ve momentum
+Bir fotonun kütlesi var mıdır? | Hayır
+Bir kara deliğin olay ufku nedir? | Kaçışın imkansız olduğu sınır
